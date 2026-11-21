@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block title %}{{ event['name'] }} - Event Details{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 1.5rem;">
+    <a href="{{ url_for('index') }}" style="color: var(--primary); text-decoration: none; font-weight: 600;">
+        &larr; Back to all events
+    </a>
+</div>
+
+<div class="detail-container">
+    <!-- Main Event Details Card -->
+    <div class="detail-main-card">
+        <div class="detail-header">
+            <div>
+                <h1 class="page-title" style="margin-bottom: 0.35rem;">{{ event['name'] }}</h1>
+                <p style="color: var(--text-muted); font-size: 1rem;">
+                    Hosted by <strong>{{ event['organizer'] }}</strong>
+                </p>
+            </div>
+            <div>
+                {% if event['status'] == 'Verified' %}
+                    <span class="status-badge verified" style="font-size: 0.9rem; padding: 0.4rem 0.8rem;">🟢 Verified</span>
+                {% elif event['status'] == 'Needs review' %}
+                    <span class="status-badge needs-review" style="font-size: 0.9rem; padding: 0.4rem 0.8rem;">🟡 Needs Review</span>
+                {% else %}
+                    <span class="status-badge unverified" style="font-size: 0.9rem; padding: 0.4rem 0.8rem;">⚪ Unverified</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <hr style="border: none; border-top: 1px solid var(--border-color); margin: 1.25rem 0;">
+
+        <!-- Quick Summary Grid -->
+        <div class="detail-meta-grid">
+            <div class="meta-item">
+                <span class="meta-label">📅 Event Date</span>
+                <span class="meta-value">{{ event['event_date'] }}</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">📍 Reported Source</span>
+                <span class="meta-value">{{ event['source'] }}</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">🏷️ Event ID</span>
+                <span class="meta-value">#{{ event['id'] }}</span>
+            </div>
+        </div>
+
+        <!-- Event Description -->
+        <div style="margin: 2rem 0;">
+            <h3 style="font-size: 1.15rem; margin-bottom: 0.75rem; color: var(--text-main);">About This Opportunity</h3>
+            <p style="white-space: pre-line; line-height: 1.7; color: #334155;">
+                {{ event['description'] if event['description'] else 'No additional description provided.' }}
+            </p>
+        </div>
+
+        <!-- Call to Action -->
+        <div style="background-color: #f8fafc; border: 1px solid var(--border-color); padding: 1.5rem; border-radius: 8px; text-align: center; margin-top: 2rem;">
+            <p style="margin-bottom: 1rem; color: var(--text-muted);">
+                Ready to participate? You will be directed to the official organizer form.
+            </p>
+            <a href="{{ event['registration_link'] }}" target="_blank" rel="noopener noreferrer" class="btn-primary" style="font-size: 1rem; padding: 0.75rem 2rem;">
+                Proceed to Registration Form ↗
+            </a>
+            <div style="margin-top: 0.5rem; font-size: 0.8rem; color: var(--text-muted);">
+                Link destination: <code>{{ event['registration_link'] }}</code>
+            </div>
+        </div>
+    </div>
+
+    <!-- Student Safety & Verification Notes Sidebar -->
+    <aside class="detail-sidebar">
+        <div class="safety-card">
+            <h3 style="font-size: 1.05rem; margin-bottom: 0.75rem; color: #1e3a8a;">
+                🛡️ Verification Breakdown
+            </h3>
+
+            {% if event['status'] == 'Verified' %}
+                <p style="font-size: 0.9rem; color: #166534; margin-bottom: 0.75rem;">
+                    <strong>Why it is Verified:</strong> This event was cross-referenced with official college notices, verified faculty circulars, or known campus clubs.
+                </p>
+            {% elif event['status'] == 'Needs review' %}
+                <p style="font-size: 0.9rem; color: #854d0e; margin-bottom: 0.75rem;">
+                    <strong>Under Review:</strong> This event was submitted by a student and is awaiting confirmation from college coordinators.
+                </p>
+            {% else %}
+                <p style="font-size: 0.9rem; color: #991b1b; margin-bottom: 0.75rem;">
+                    <strong>Caution Advised:</strong> This link originates from an unverified or suspicious external forward. Double-check before submitting any personal details.
+                </p>
+            {% endif %}
+
+            <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 1rem 0;">
+
+            <h4 style="font-size: 0.95rem; margin-bottom: 0.5rem; color: var(--text-main);">Student Safety Checklist:</h4>
+            <ul style="font-size: 0.85rem; color: #475569; padding-left: 1.2rem; line-height: 1.6;">
+                <li>Never share passwords or confidential OTPs.</li>
+                <li>Only pay registration fees if backed by official department faculty.</li>
+                <li>Check with your class coordinator if you notice discrepancies.</li>
+            </ul>
+        </div>
+    </aside>
+</div>
+{% endblock %}

@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - Campus Opportunity Verification Portal{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">🛡️ Administrator Verification Panel</h1>
+    <p class="page-subtitle">Review submitted student opportunities and update their verification statuses.</p>
+</div>
+
+{% if events %}
+    <div class="table-container">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Opportunity Name</th>
+                    <th>Organizer</th>
+                    <th>Date</th>
+                    <th>Reported Source</th>
+                    <th>Link</th>
+                    <th>Current Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for event in events %}
+                    <tr>
+                        <td><strong>#{{ event['id'] }}</strong></td>
+                        <td><strong>{{ event['name'] }}</strong></td>
+                        <td>{{ event['organizer'] }}</td>
+                        <td>{{ event['event_date'] }}</td>
+                        <td><span class="source-tag">📍 {{ event['source'] }}</span></td>
+                        <td>
+                            <a href="{{ event['registration_link'] }}" target="_blank" rel="noopener noreferrer" style="color: var(--primary); font-weight: 600;">
+                                View Link ↗
+                            </a>
+                        </td>
+                        <td>
+                            {% if event['status'] == 'Verified' %}
+                                <span class="status-badge verified">Verified</span>
+                            {% elif event['status'] == 'Needs review' %}
+                                <span class="status-badge needs-review">Needs Review</span>
+                            {% else %}
+                                <span class="status-badge unverified">Unverified</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <!-- Status update form -->
+                            <form method="POST" action="{{ url_for('update_status', event_id=event['id']) }}" class="status-form">
+                                <select name="status" class="form-select" style="padding: 0.3rem 0.5rem; font-size: 0.85rem; width: auto;">
+                                    <option value="Verified" {% if event['status'] == 'Verified' %}selected{% endif %}>Verified</option>
+                                    <option value="Needs review" {% if event['status'] == 'Needs review' %}selected{% endif %}>Needs review</option>
+                                    <option value="Unverified" {% if event['status'] == 'Unverified' %}selected{% endif %}>Unverified</option>
+                                </select>
+                                <button type="submit" class="btn-small">Update</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% else %}
+    <div class="form-card" style="text-align: center;">
+        <p>No events found in the database.</p>
+    </div>
+{% endif %}
+{% endblock %}

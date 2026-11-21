@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block title %}Browse Events - Campus Opportunity Verification Portal{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">Campus Hackathons & Workshops</h1>
+    <p class="page-subtitle">Find upcoming campus opportunities with transparent verification status.</p>
+</div>
+
+<!-- Search Bar & Controls -->
+<div class="search-filter-section">
+    <form method="GET" action="{{ url_for('index') }}" class="search-form">
+        <input type="text" name="q" class="search-input"
+            placeholder="Search by event title, organizer, or topic (e.g., Smart, AI, Workshop)..."
+            value="{{ search_query }}">
+        <button type="submit" class="btn-primary">Search</button>
+        {% if search_query %}
+        <a href="{{ url_for('index') }}" class="btn-clear">Clear Search</a>
+        {% endif %}
+    </form>
+</div>
+
+<!-- Filter Bar: Easily view Verified, Needs review, or Unverified events -->
+<div class="filter-bar">
+    <a href="{{ url_for('index', q=search_query if search_query else None) }}"
+        class="filter-btn {% if current_filter == 'All' %}active{% endif %}">
+        All Events
+    </a>
+    <a href="{{ url_for('index', status='Verified', q=search_query if search_query else None) }}"
+        class="filter-btn {% if current_filter == 'Verified' %}active{% endif %}">
+        🟢 Verified Only
+    </a>
+    <a href="{{ url_for('index', status='Needs review', q=search_query if search_query else None) }}"
+        class="filter-btn {% if current_filter == 'Needs review' %}active{% endif %}">
+        🟡 Needs Review
+    </a>
+    <a href="{{ url_for('index', status='Unverified', q=search_query if search_query else None) }}"
+        class="filter-btn {% if current_filter == 'Unverified' %}active{% endif %}">
+        ⚪ Unverified
+    </a>
+</div>
+
+{% if search_query %}
+<p style="color: var(--text-muted); margin-bottom: 1rem; font-size: 0.95rem;">
+    Showing search results for <strong>"{{ search_query }}"</strong> ({{ events|length }} found):
+</p>
+{% endif %}
+
+<!-- Grid of Event Cards -->
+{% if events %}
+<div class="cards-grid">
+    {% for event in events %}
+    <article class="event-card">
+        <div>
+            <div class="card-header">
+                <h2 class="card-title">{{ event['name'] }}</h2>
+                <!-- Status Badge -->
+                {% if event['status'] == 'Verified' %}
+                <span class="status-badge verified">Verified</span>
+                {% elif event['status'] == 'Needs review' %}
+                <span class="status-badge needs-review">Needs Review</span>
+                {% else %}
+                <span class="status-badge unverified">Unverified</span>
+                {% endif %}
+            </div>
+
+            <div class="card-details">
+                <div class="detail-row">
+                    <span class="detail-label">Organizer:</span> {{ event['organizer'] }}
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Date:</span> {{ event['event_date'] }}
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Reported Source:</span>
+                    <div class="source-tag">📍 {{ event['source'] }}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-actions-group">
+            <a href="{{ url_for('event_detail', event_id=event['id']) }}" class="btn-outline">
+                View Details & Verification &rarr;
+            </a>
+            <a href="{{ event['registration_link'] }}" target="_blank" rel="noopener noreferrer" class="btn-register">
+                Register Directly ↗
+            </a>
+        </div>
+    </article>
+    {% endfor %}
+</div>
+{% else %}
+<div class="form-card" style="text-align: center;">
+    <h3>No opportunities found.</h3>
+    <p style="color: var(--text-muted); margin: 0.5rem 0 1rem 0;">
+        {% if search_query %}
+        No events matched your search "{{ search_query }}". Try clearing the search or checking another filter!
+        {% else %}
+        No events currently match this filter. Be the first to share one!
+        {% endif %}
+    </p>
+    <a href="{{ url_for('add') }}" class="btn-primary">+ Submit an Event</a>
+</div>
+{% endif %}
+{% endblock %}

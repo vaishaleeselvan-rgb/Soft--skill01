@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Submit Opportunity - Campus Opportunity Verification Portal{% endblock %}
+
+{% block content %}
+<div class="page-header" style="text-align: center;">
+    <h1 class="page-title">Submit a Campus Opportunity</h1>
+    <p class="page-subtitle">Know about an upcoming hackathon or workshop? Share it with the student community.</p>
+</div>
+
+<div class="form-card">
+    <form method="POST" action="{{ url_for('add') }}">
+        <!-- Event Name -->
+        <div class="form-group">
+            <label for="name" class="form-label">Event Name *</label>
+            <input type="text" id="name" name="name" class="form-input" placeholder="e.g. National Hackathon 2026" required>
+        </div>
+
+        <!-- Organizer -->
+        <div class="form-group">
+            <label for="organizer" class="form-label">Organizer / Host Club *</label>
+            <input type="text" id="organizer" name="organizer" class="form-input" placeholder="e.g. Computer Science Club, IEEE Student Branch" required>
+        </div>
+
+        <!-- Event Date -->
+        <div class="form-group">
+            <label for="event_date" class="form-label">Event Date *</label>
+            <input type="date" id="event_date" name="event_date" class="form-input" required>
+        </div>
+
+        <!-- Registration Link -->
+        <div class="form-group">
+            <label for="registration_link" class="form-label">Registration / Official Link *</label>
+            <input type="text" id="registration_link" name="registration_link" class="form-input" placeholder="e.g. https://www.sih.gov.in or sih.gov.in" required>
+            <div class="form-hint">Links to the official registration page or form</div>
+        </div>
+
+        <!-- Source / Origin -->
+        <div class="form-group">
+            <label for="source" class="form-label">Where did you find this? (Source) *</label>
+            <input type="text" id="source" name="source" class="form-input" placeholder="e.g. Official College Circular, Class WhatsApp Group, Instagram Post" required>
+            <div class="form-hint">Helping us know the source makes verification much faster!</div>
+        </div>
+
+        <!-- Event Description -->
+        <div class="form-group">
+            <label for="description" class="form-label">Event Description & Eligibility</label>
+            <textarea id="description" name="description" class="form-textarea" rows="4" placeholder="Briefly describe what the event is about, team size requirements, prizes, and who can attend..."></textarea>
+            <div class="form-hint">Students will be able to read this on the Event Details page.</div>
+        </div>
+
+        <!-- Note about review status -->
+        <div style="background-color: #f8fafc; border-left: 4px solid #1e40af; padding: 0.75rem; border-radius: 4px; margin-bottom: 1.5rem; font-size: 0.85rem; color: #475569;">
+            ℹ️ <strong>Verification Policy:</strong> Newly submitted events will be tagged as <strong>Needs review</strong> until an administrator verifies the details.
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn-primary" style="width: 100%;">Submit for Review</button>
+    </form>
+</div>
+{% endblock %}

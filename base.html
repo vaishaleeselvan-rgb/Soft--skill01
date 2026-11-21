@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Campus Opportunity Verification Portal{% endblock %}</title>
+    <!-- Link to our clean CSS stylesheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <!-- Main Navigation Bar -->
+    <header class="navbar">
+        <a href="{{ url_for('index') }}" class="brand">
+            🎓 Campus Opportunity Portal
+        </a>
+        <nav class="nav-links">
+            <a href="{{ url_for('index') }}" class="nav-link">Browse Events</a>
+            <a href="{{ url_for('add') }}" class="btn-primary">+ Submit Event</a>
+            <a href="{{ url_for('admin') }}" class="nav-link">Admin Portal</a>
+        </nav>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="container">
+        <!-- Flash messages for user notifications (e.g. success or errors) -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="flash {{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <!-- Child templates will insert their content inside this block -->
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p><strong>Campus Opportunity Verification Portal</strong> &bull; Promoting safe and verified student opportunities.</p>
+        <p>Always verify links before providing personal information or registration fees.</p>
+    </footer>
+
+</body>
+</html>
